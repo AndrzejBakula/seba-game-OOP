@@ -1,0 +1,9 @@
+HEPD	HEPO	HEPO	HEPO	HEPO	HEPO	HEPO	HEPO	HELD
+HEPI	####	GRF4	####	####	....	....	CPU2	HEPI
+HEPI	####	....	BURN	####	....	....	HEEL	HEXL
+HEPI	M1M1	....	####	####	....	POPP	CPU2	HEPI
+HEPI	####	....	....	####	G1G1	HEEL	HEPO	HEXG
+HEPI	####	SKBR	GRG1	GRG2	....	....	....	+1+1
+HEPI	....	....	....	....	....	....	BACK	+1+1
+HEPI	TRRE	....	POPP	....	....	STAR	....	+1+1
+HEPG	HEPO	HEPO	HEPO	HELD	TREE	-1-1	TREE	HEPD

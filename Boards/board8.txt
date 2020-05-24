@@ -1,0 +1,9 @@
+HEPD HEPO HELG #### #### #### #### #### ####
+HEPI TRRF .... #### M1M1 #### 05zl igno ####
+HEXP HEPO G0G0 #### .... $1$1 .... #### ####
+HEPI POPP BrA3 BrBr WRO1 #### 10zl ciga ####
+HEXG HEEP .... .... JUNK #### .... #### ####
+-1-1 .... .... .... GRF2 #### 05zl piwf ####
+-1-1 STAR .... .... .... SKOP .... #### ####
+-1-1 .... POPP TRGF RECY #### 20zl buem ####
+HEPO HEPO HEPO HEPO HELD #### #### #### ####

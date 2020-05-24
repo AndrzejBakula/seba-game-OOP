@@ -1,0 +1,9 @@
+LLLL	GGGG	PACY	GGGG	GGGG	GGGG	GGGG	KOT1	GRGR
+LLLL	PoPo	....	NAP1	....	....	....	....	RRRR
+LLLL	TRGF	####	....	....	KOLO	....	....	RRRR
+LLLL	####	####	####	####	####	....	....	+1+1
+LLLL	STA1	....	....	####	....	....	BACK	+1+1
+LLLL	####	####	....	BrBr	....	....	....	+1+1
+LLLL	....	....	....	####	....	....	....	RRRR
+LLLL	TRGE	GRF2	....	dpdp	....	....	BIKE	RRRR
+DLDL	DDDD	DDDD	DDDD	DDDD	DDDD	DDDD	DDDD	DRDR

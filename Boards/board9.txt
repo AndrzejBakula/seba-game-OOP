@@ -1,0 +1,9 @@
+GLGL GGGG GGGG GGGG GGGG GGGG GGGG GGGG GRGR
+LLLL END1 .... .... .... .... .... .... RRRR
+LLLL .... .... .... .... .... .... .... RRRR
+LLLL .... .... .... .... .... .... .... RRRR
+LLLL .... .... .... .... .... .... .... RRRR
+LLLL .... .... .... .... .... .... .... RRRR
+LLLL .... .... .... .... .... .... .... RRRR
+LLLL .... .... .... STAR .... .... .... RRRR
+DLDL DDDD DDDD DDDD G0G0 DDDD DDDD DDDD DRDR
