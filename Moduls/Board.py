@@ -33,3 +33,19 @@ class Board:
         with open("Boards/board" + str(self.level) + "_1.txt") as file_in:
             for line in file_in:
                 self.new_board.append(line.split())
+
+    def modem_switch(self):
+        num_cells_x = len(self.board_list[0])
+        num_cells_y = len(self.board_list)
+        for y in range(num_cells_y):
+            for x in range(num_cells_x):
+                if self.board_list[y][x] == 'MMMM':
+                    self.board_list[y][x] = 'M1M1'
+
+    def open_gate(self):
+        num_cells_x = len(self.board_list[0])
+        num_cells_y = len(self.board_list)
+        for y in range(num_cells_y):
+            for x in range(num_cells_x):
+                if self.board_list[y][x] == 'G0G0':
+                    self.board_list[y][x] = 'G1G1'

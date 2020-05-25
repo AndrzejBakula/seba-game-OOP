@@ -5,5 +5,5 @@ LLLL	....	....	####	####	####	####	....	RRRR
 LLLL	G0G0	G0G0	####	M1M1	BrBr	BrA3	....	RRRR
 +1+1	....	....	####	$1$1	####	....	....	TRYF
 +1+1	BACK	....	....	....	####	$1$1	####	RRRR
-+1+1	....	STAR	NAP7	....	LASK	....	PIWE	TRSF
++1+1	....	STAR	....	....	LASK	....	PIWE	TRSF
 DLDL	-1-1	-1-1	-1-1	DDDD	DDDD	DDDD	DDDD	DRDR
