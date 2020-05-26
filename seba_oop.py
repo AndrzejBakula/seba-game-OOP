@@ -14,7 +14,7 @@ lowBoard = LowBoard() #generate inventory board.
 saved_boards = board.saved_boards_list #keeps temporary boards.
 
 #Board function:
-def remove_from_board(taken_item): #removes items from board after hero step on it. HAVE TO CHANGE IT TO CLASS.
+def remove_from_board(taken_item): #removes items from board after hero step on it. WANT TO CHANGE IT TO BOARD METHOD.
     num_cells_x = len(board.board_list[0])
     num_cells_y = len(board.board_list)
     for y in range(num_cells_y):
