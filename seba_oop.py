@@ -657,7 +657,7 @@ def try_move(stepX, stepY): #main game function - hero moves and actions.
             
     if bnp == 'KOLO': #he sells ganja for cash.
         pass
-        board.board_list[1][3] = '....' #have to change.
+        board.board_list[1][3] = '....' #this is hardcoded - I have to change it.
         if 'money' in Bag and Bag['money'] >= 35:
             for y in range(new_pos_y-1, new_pos_y): #to simplify.
                 for x in range(new_pos_x-1, new_pos_x+2):
@@ -749,7 +749,7 @@ def try_move(stepX, stepY): #main game function - hero moves and actions.
             board.board_list[new_pos_y][new_pos_x] = '....'
     if bnp == 'SLUT': #she takes joints for cash; give away cigarret butt.
         pass
-        #board.board_list[1][4] = '....' #this is hardcoded - I have to change.
+        #board.board_list[1][4] = '....' #this is hardcoded - I have to change it.
         if 'joint' in Bag and Bag['joint'] > 0:
             for y in range(new_pos_y-1, new_pos_y): # have to simplify.
                 for x in range(new_pos_x-1, new_pos_x+2):
@@ -775,9 +775,9 @@ def try_move(stepX, stepY): #main game function - hero moves and actions.
             remove_from_Bag('ganja', 1)
             lowBoard.remove_from_inventory('GaGa', 1)
             add_to_Bag('money', 35)
-    if bnp == 'BIKE': #guy with bike - takes beer for cash, give away empty bottle
+    if bnp == 'BIKE': #guy with bike - takes beer for cash, give away empty bottle.
         pass
-        board.board_list[6][5] = '....' #have to change.
+        board.board_list[6][5] = '....' #this is hardcoded - I have to change it.
         if 'beerfull' in Bag and Bag['beerfull'] > 0 and bike_try <= 9:
             for y in range(new_pos_y-1, new_pos_y): # have to simplify.
                 for x in range(new_pos_x-1, new_pos_x+2):
@@ -804,7 +804,7 @@ def try_move(stepX, stepY): #main game function - hero moves and actions.
                         break
     if bnp == 'LASK': #she takes cigarrete box for cash and leaves cigarettes and ember.
         pass
-        board.board_list[7][3] = '....' # have to change.
+        board.board_list[7][3] = '....' # this is hardcoded - I have to change it.
         if 'cigarettebox' in Bag and Bag['cigarettebox'] > 0:
             remove_from_Bag('cigarettebox', 1)
             lowBoard.remove_from_inventory('CIGA', 1)
@@ -848,7 +848,7 @@ def try_move(stepX, stepY): #main game function - hero moves and actions.
             laska_try += 1
     if bnp == 'CYGA': #first boss - you need to get 300zł or 9 piece of ganja for him.
         pass
-        board.board_list[1][1] = '....' #have to change.
+        board.board_list[1][1] = '....' # this is hardcoded - I have to change it.
         if 'money' in Bag and Bag['money'] >= 300:
             board.board_list[new_pos_y][new_pos_x] = '....'
             remove_from_Bag('money', 300)
@@ -908,7 +908,7 @@ def try_move(stepX, stepY): #main game function - hero moves and actions.
             if 'bucketEmpty' in Bag and Bag['bucketEmpty'] == 1:
                 remove_from_Bag('bucketEmpty', 1)
                 lowBoard.remove_from_inventory('BUEM', 1)
-            board.board_list[6][2] = '....' #have to change.
+            board.board_list[6][2] = '....' #this is hardcoded - I have to change it.
     if bnp == 'CKEY': #car key.
         add_to_Bag('carkeys', 1)
         lowBoard.add_to_inventory('CKEY', 1)

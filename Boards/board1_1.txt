@@ -4,6 +4,6 @@ LLLL	TRGE	####	....	....	KOLO	....	....	RRRR
 LLLL	####	####	####	####	####	....	....	+1+1
 LLLL	STA1	....	....	####	....	....	BACK	+1+1
 LLLL	####	####	....	BrBr	....	....	....	+1+1
-LLLL	....	....	....	####	....	....	....	RRRR
+LLLL	....	....	....	####	....	PIWE	....	RRRR
 LLLL	TRGE	GRF2	....	dpdp	....	....	BIKE	RRRR
 DLDL	DDDD	DDDD	DDDD	DDDD	DDDD	DDDD	DDDD	DRDR

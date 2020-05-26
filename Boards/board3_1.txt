@@ -1,9 +1,9 @@
 GLGL	HWD1	HWD2	HWD3	HWD4	QQQ1	TREE	TREE	TREE
-LLLL	NAP5	....	....	....	CYGA	####	PoPo	TRGF
-LLLL	....	....	....	....	CCCC	####	....	RRRR
+LLLL	NAP5	....	....	....	CYGA	####	....	TRGE
+LLLL	....	....	....	....	....	####	....	RRRR
 LLLL	....	....	####	####	####	####	....	RRRR
-LLLL	G0G0	G0G0	####	M1M1	BrBr	BrA3	....	RRRR
-+1+1	....	....	####	$1$1	####	....	....	TRYF
-+1+1	BACK	....	....	....	####	$1$1	####	RRRR
-+1+1	....	STAR	....	....	LASK	....	PIWE	TRSF
+LLLL	G1G1	G1G1	####	M1M1	BrBr	....	....	RRRR
++1+1	....	....	####	dpdp	####	....	....	TRYE
++1+1	BACK	....	....	....	####	dpdp	####	RRRR
++1+1	....	STAR	....	....	LABE	....	....	TRSE
 DLDL	-1-1	-1-1	-1-1	DDDD	DDDD	DDDD	DDDD	DRDR

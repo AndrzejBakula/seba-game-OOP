@@ -11,8 +11,6 @@ class Board:
                 self.board_list.append(line.split())
 
     def save_board(self):
-        # global board
-        # global saved_boards
         self.saved_boards_list.append("Boards/board" + str(self.level) + "_1.txt")
         with open("Boards/board" + str(self.level) + "_1.txt", "w") as fp:
             fp.writelines('%s\n' % '\t'.join(items) for items in self.board_list)
