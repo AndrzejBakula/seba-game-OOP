@@ -1,5 +1,19 @@
 
 class Board:
+    FREE_MOVES = ['....', 'BrA1', 'BrA2', 'BrA3', 'toto', 'tvtv', 'qqqq', '@@@@', '@1@1',
+                  '@2@2', 'PPPP', 'WWWW', 'M1M1', 'CCCC', 'GaGa', 'CaCa', 'JoJo', 'G1G1',
+                  'CRUU', 'dpdp', 'bbbb', 'QQQQ', 'PPPP', '+1+1', '-1-1', 'STA1', 'STAR',
+                  'BACK', 'PoPo', 'NAP1', 'NAP2', 'NAP3', 'NAP4', 'NAP5', 'NAP6', 'NAP7',
+                  '10zl', '05zl', 'CROW', 'JUNB', 'PIWF', 'PIWE', 'RECY', 'CIGA', 'CIG1',
+                  'PuPu', 'crow', 'LABE', 'ZAPA', '20zl', 'piwf', 'ciga', 'MAKU', 'SKOP',
+                  'SKBR', 'BUEM', 'BUWA', 'POPP', 'SEKA', 'ZNIC', ',,,,', 'NAP8', 'BOTT',
+                  'buem', 'IGPu', 'IGNO', 'igno', 'HERO', 'NAP9', 'BURN', 'EVER', 'CKEY',
+                  'buem']
+
+    ITEMS_TO_TAKE = ['@@@@', '@1@1', '@2@2', 'PPPP', 'WWWW', 'GaGa', 'CaCa', 'bbbb', 'CCCC',
+                    'JoJo', 'PoPo', 'PIWE', 'CIG1', 'PuPu', 'MAKU', 'SEKA', 'BOTT', 'HERO',
+                    'IGPu', 'EVER', 'CKEY']
+
     level = 0
     board_list = []
     saved_boards_list = []
