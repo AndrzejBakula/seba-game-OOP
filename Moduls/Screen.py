@@ -1,3 +1,4 @@
+import pygame
 
 class Screen:
 

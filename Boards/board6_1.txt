@@ -3,7 +3,7 @@ HEPI	....	....	....	HEXP	HEEP	BACK	HEEL	HEXL
 HEPI	....	TRGE	....	....	....	....	....	HEPI
 HEPI	....	HEPD	HEPO	HEXL	....	TREE	M1M1	HEPI
 HEPI	....	HEPI	TREE	HEXP	HEPO	HEPO	HEPO	HEXL
-HEPI	....	HEPG	HEPO	HEXL	....	....	....	HEPI
+HEPI	....	HEPG	HEPO	HEXL	POPP	....	POPP	HEPI
 HEPI	....	....	....	HEPG	HEPO	G1G1	HEPO	HEXL
-HEPI	HYDR	....	....	....	....	STAR	TREE	HEPI
+HEPI	HYDR	CPU1	....	....	....	STAR	TREE	HEPI
 ####	####	####	####	####	-1-1	-1-1	HEPD	HELG

@@ -9,6 +9,7 @@ from Moduls.Objects import Objects
 from Moduls.Inv import Inv
 from Moduls.Signs import Signs
 from Moduls.Bag import Bag
+from Moduls.Recycler import Recycler
 
 #BOARDS:
 board = Board() #generate boards for every level; has methods to save/load local boards.
@@ -16,10 +17,10 @@ lowBoard = LowBoard() #generate inventory board.
 saved_boards = board.saved_boards_list #keeps temporary boards.
 
 #SCREEN:
-screen = Screen(board, lowBoard)
-cell_size = screen.CELL_SIZE
-screen_width = screen.screen_width
-screen_height = screen.screen_height
+screen_object = Screen(board, lowBoard)
+cell_size = screen_object.CELL_SIZE
+screen_width = screen_object.screen_width
+screen_height = screen_object.screen_height
 
 #HERO:
 hero = Hero(board) #has hero coordinates tuple, list of hero variations and generate hero graphics dictionary.
@@ -38,7 +39,7 @@ items = Items() #has list of items and generate items graphics dictionary.
 objects = Objects() #has list of objects and generate objects graphics dictionary.
 
 #INVENTORY:
-inv = Inv() #has list of inventory and generate inventory graphics dictionary.
+inv = Inv(lowBoard, bag) #generate inventory graphics dictionary, got several inventory functions.
 
 #SIGNS:
 signs = Signs() #has list of signs and generate signs graphics dictionary.
@@ -403,6 +404,7 @@ def try_move(stepX, stepY): #main game function - hero moves and actions.
     global junkie_try
     global bike_try
     global laska_try
+
     new_pos_x = hero_position[0]+stepX
     new_pos_y = hero_position[1]+stepY
     last_pos_x = hero_position[0]
@@ -416,21 +418,21 @@ def try_move(stepX, stepY): #main game function - hero moves and actions.
     if (bnp in board.ITEMS_TO_TAKE):
         board.board_list[new_pos_y][new_pos_x] = '....'
     if bnp == '@@@@': #key.
-        add_to_Bag('key2', 1)
+        bag.add_to_Bag('key2', 1)
         lowBoard.add_to_inventory('@@@@', 1)
     if bnp == '@1@1': #key.
-        add_to_Bag('key', 1)
+        bag.add_to_Bag('key', 1)
         lowBoard.add_to_inventory('@1@1', 1)
     if bnp == '@2@2': #key.
-        add_to_Bag('key3', 1)
+        bag.add_to_Bag('key3', 1)
         lowBoard.add_to_inventory('@2@2', 1)
     if bnp == 'PPPP': #phone.
-        add_to_Bag('phone', 1)
+        bag.add_to_Bag('phone', 1)
         board.modem_switch()
         lowBoard.instal_phone()
     if bnp == 'WWWW': #wallet.
-        add_to_Bag('wallet', 1)
-        add_to_Bag('money', 50)
+        bag.add_to_Bag('wallet', 1)
+        bag.add_to_Bag('money', 50)
         lowBoard.instal_wallet()
         #lowBoard.lowBoard_list[2][4] = 'i9i9' #This is hardcoded, I have to change it.
     if bnp == 'M1M1': #modem - it opens gate.
@@ -458,7 +460,7 @@ def try_move(stepX, stepY): #main game function - hero moves and actions.
                 elif board.board_list[y+2][x] == '....':
                     board.board_list[y+2][x] = '@2@2'
                     break
-        remove_from_Bag('key', 1)
+        bag.remove_from_Bag('key', 1)
         lowBoard.remove_from_inventory('@1@1', 1)
     if bnp == 'BrBr' and blp == 'BrA1': #broken wall - hidden stuff.
         pass
@@ -472,53 +474,53 @@ def try_move(stepX, stepY): #main game function - hero moves and actions.
         pass
         if 'CRO1' in bag.bag_dict and bag.bag_dict['CRO1'] > 0: #crowbar.
             board.board_list[last_pos_y][last_pos_x] = '@@@@'
-            remove_from_Bag('CRO1', 1)
+            bag.remove_from_Bag('CRO1', 1)
             lowBoard.remove_from_inventory('CRO1', 1)
     if bnp == 'CCCC': #cigarrete.
-        add_to_Bag('cigarrete', 1)
+        bag.add_to_Bag('cigarrete', 1)
         lowBoard.add_to_inventory('CCCC', 1)
     if bnp == 'PoPo': #ciggaret butt (ember).
-        add_to_Bag('ember', 1)
+        bag.add_to_Bag('ember', 1)
         lowBoard.add_to_inventory('PoPo', 1)
     if bnp == 'GaGa': #piece of ganja.
-        add_to_Bag('ganja', 1)
+        bag.add_to_Bag('ganja', 1)
         lowBoard.add_to_inventory('GaGa', 1)
     if bnp == 'JoJo': #joint.
-        add_to_Bag('joint', 1)
+        bag.add_to_Bag('joint', 1)
         lowBoard.add_to_inventory('JoJo', 1)
     if bnp == 'PIWF': #full bottle of beer.
         if bag.bag_dict['money'] >= 5:
-            add_to_Bag('beerfull', 1)
+            bag.add_to_Bag('beerfull', 1)
             lowBoard.add_to_inventory('PIWF', 1)
-            remove_from_Bag('money', 5)
+            bag.remove_from_Bag('money', 5)
             board.board_list[new_pos_y][new_pos_x] = 'piwf'
     if bnp == 'PIWE': #empty bottle of beer.
-        add_to_Bag('beerempty', 1)
+        bag.add_to_Bag('beerempty', 1)
         lowBoard.add_to_inventory('PIWE', 1)
     if bnp == 'CIGA': #cigarrete box for buy in store.
         hero_position = (new_pos_x, new_pos_y)
         if bag.bag_dict['money'] >= 10:
-            add_to_Bag('cigarettebox', 1)
+            bag.add_to_Bag('cigarettebox', 1)
             lowBoard.add_to_inventory('CIGA', 1)
-            remove_from_Bag('money', 10)
+            bag.remove_from_Bag('money', 10)
             board.board_list[new_pos_y][new_pos_x] = 'ciga'
     if bnp == 'CIG1': #cigarrete box to take.
         hero_position = (new_pos_x, new_pos_y)
-        add_to_Bag('cigarettebox', 1)
+        bag.add_to_Bag('cigarettebox', 1)
         lowBoard.add_to_inventory('CIGA', 1)
     if bnp == 'PuPu': #can (metal trash).
-        add_to_Bag('can', 1)
+        bag.add_to_Bag('can', 1)
         lowBoard.add_to_inventory('PuPu', 1)
     if bnp == 'MAKU': #flower of poppy.
-        add_to_Bag('poppy', 1)
+        bag.add_to_Bag('poppy', 1)
         lowBoard.add_to_inventory('MAKU', 1)
     if bnp == 'CaCa': #baseball cap.
-        add_to_Bag('cap', 1)    
+        bag.add_to_Bag('cap', 1)
     if bnp == '$$$$': #door.
         if 'key3' in bag.bag_dict and bag.bag_dict['key3'] > 0:
             hero_position = (new_pos_x, new_pos_y)
             board.board_list[new_pos_y][new_pos_x] = 'dpdp'
-            remove_from_Bag('key3', 1)
+            bag.remove_from_Bag('key3', 1)
             lowBoard.remove_from_inventory('@2@2', 1)
         else:
             pass # cannot move - closed
@@ -526,7 +528,7 @@ def try_move(stepX, stepY): #main game function - hero moves and actions.
         if 'CROW' in bag.bag_dict and bag.bag_dict['CROW'] > 0:
             hero_position = (new_pos_x, new_pos_y)
             board.board_list[new_pos_y][new_pos_x] = 'SKBR'
-            remove_from_Bag('CROW', 1)
+            bag.remove_from_Bag('CROW', 1)
             lowBoard.remove_from_inventory('CROW', 1)
         else:
             pass # cannot move - closed
@@ -535,12 +537,12 @@ def try_move(stepX, stepY): #main game function - hero moves and actions.
         if 'key2' in bag.bag_dict and bag.bag_dict['key2'] == 1:
             hero_position = (new_pos_x, new_pos_y)
             board.board_list[new_pos_y][new_pos_x] = 'dpdp'
-            remove_from_Bag('key2', 1)
+            bag.remove_from_Bag('key2', 1)
             lowBoard.remove_from_inventory('@@@@', 1)
         else:
             pass # cannot move - closed
     if bnp == 'bbbb': #bag - we takes it once.
-        add_to_Bag('bag', 1)
+        bag.add_to_Bag('bag', 1)
         lowBoard.wear_bag()
     if bnp == 'QQQQ': #quit to next level.
         board.level += 1
@@ -556,13 +558,13 @@ def try_move(stepX, stepY): #main game function - hero moves and actions.
         hero_position = hero.new_hero_position
     if bnp == 'QQQ2': #quit to next level.
         if 'Strzykawka' in bag.bag_dict and bag.bag_dict['Strzykawka'] == 1:
-            remove_from_Bag('Strzykawka', 1)
+            bag.remove_from_Bag('Strzykawka', 1)
             lowBoard.remove_from_inventory('IGNO', 1)
         if 'StrzykawkaEmpty' in bag.bag_dict and bag.bag_dict['StrzykawkaEmpty'] == 1:
-            remove_from_Bag('StrzykawkaEmpty', 1)
+            bag.remove_from_Bag('StrzykawkaEmpty', 1)
             lowBoard.remove_from_inventory('IGPu', 1)
         if 'poppy' in bag.bag_dict and bag.bag_dict['poppy'] == 1:
-            remove_from_Bag('poppy', 1)
+            bag.remove_from_Bag('poppy', 1)
             lowBoard.remove_from_inventory('MAKU', 1)
         board.level = 9
         board.get_new_board()
@@ -584,38 +586,38 @@ def try_move(stepX, stepY): #main game function - hero moves and actions.
         hero.get_back_position()
         hero_position = hero.new_hero_position
     if bnp == 'CRUU': #crusher for ganja - we roll joints here.
-        roll_joint()
+        inv.roll_joint()
     if bnp == 'ZAPA': #lighter - we open cigarretes here.
-        unpack_cigarettes()
+        inv.unpack_cigarettes()
     if bnp == 'CROW': #crowbar to buy in store.
         hero_position = (new_pos_x, new_pos_y)
         if ('CROW' not in bag.bag_dict or bag.bag_dict['CROW'] < 1) and bag.bag_dict['money'] >= 20:
-            remove_from_Bag('money', 20)
-            add_to_Bag('CROW', 1)
+            bag.remove_from_Bag('money', 20)
+            bag.add_to_Bag('CROW', 1)
             lowBoard.add_to_inventory('CROW', 1)
             board.board_list[new_pos_y][new_pos_x] = 'crow'
     if bnp == 'TRGF': #trash box where you can take crowbar.
-        add_to_Bag('CRO1', 1)
+        bag.add_to_Bag('CRO1', 1)
         lowBoard.add_to_inventory('CRO1', 1)
         board.board_list[new_pos_y][new_pos_x] = 'TRGE'
     if bnp == 'TRSF': #thrash box where you can take key.
-        add_to_Bag('key2', 1)
+        bag.add_to_Bag('key2', 1)
         lowBoard.add_to_inventory('@@@@', 1)
         board.board_list[new_pos_y][new_pos_x] = 'TRSE'
     if bnp == 'TRYF': #thrash box where you can take can.
-        add_to_Bag('can', 1)
+        bag.add_to_Bag('can', 1)
         lowBoard.add_to_inventory('PuPu', 1)
         board.board_list[new_pos_y][new_pos_x] = 'TRYE'
     if bnp == 'TRRF': #thrash box where you can take empty bottle.
-        add_to_Bag('bottle', 1)
+        bag.add_to_Bag('bottle', 1)
         lowBoard.add_to_inventory('BOTT', 1)
         board.board_list[new_pos_y][new_pos_x] = 'TRRE'
     if bnp == 'RECY': #recycle been - you can exchange here trash for store products.
-        exchange_bottle()
-        exchange_cans()
-        exchange_embers()
-        exchange_plastic_bottles()
-        exchange_needle()
+        recycler.exchange_bottle()
+        recycler.exchange_cans()
+        recycler.exchange_embers()
+        recycler.exchange_plastic_bottles()
+        recycler.exchange_needle()
             
     if bnp == 'KOLO': #he sells ganja for cash.
         pass
@@ -625,15 +627,15 @@ def try_move(stepX, stepY): #main game function - hero moves and actions.
                 for x in range(new_pos_x-1, new_pos_x+2):
                     if board.board_list[y][x] == '....':
                         board.board_list[y][x] = 'GaGa'
-                        remove_from_Bag('money', 35)
+                        bag.remove_from_Bag('money', 35)
                         break
                     elif board.board_list[y+1][x] == '....':
                         board.board_list[y+1][x] = 'GaGa'
-                        remove_from_Bag('money', 35)
+                        bag.remove_from_Bag('money', 35)
                         break
                     elif board.board_list[y+2][x] == '....':
                         board.board_list[y+2][x] = 'GaGa'
-                        remove_from_Bag('money', 35)
+                        bag.remove_from_Bag('money', 35)
                         break            
     if bnp == 'JUNK': #she takes ganja or heroine for cash; leaves cigarrete butts (ember).
         pass
@@ -642,23 +644,23 @@ def try_move(stepX, stepY): #main game function - hero moves and actions.
                 for x in range(new_pos_x-1, new_pos_x+2):
                     if board.board_list[y][x] == '....':
                         board.board_list[y][x] = 'PoPo'
-                        remove_from_Bag('ganja', 1)
+                        bag.remove_from_Bag('ganja', 1)
                         lowBoard.remove_from_inventory('GaGa', 1)
-                        add_to_Bag('money', 40)
+                        bag.add_to_Bag('money', 40)
                         junkie_try += 1
                         break
                     elif board.board_list[y+1][x] == '....':
                         board.board_list[y+1][x] = 'PoPo'
-                        remove_from_Bag('ganja', 1)
+                        bag.remove_from_Bag('ganja', 1)
                         lowBoard.remove_from_inventory('GaGa', 1)
-                        add_to_Bag('money', 40)
+                        bag.add_to_Bag('money', 40)
                         junkie_try += 1
                         break
                     elif board.board_list[y+2][x] == '....':
                         board.board_list[y+2][x] = 'PoPo'
-                        remove_from_Bag('ganja', 1)
+                        bag.remove_from_Bag('ganja', 1)
                         lowBoard.remove_from_inventory('GaGa', 1)
-                        add_to_Bag('money', 40)
+                        bag.add_to_Bag('money', 40)
                         junkie_try += 1
                         break
             if junkie_try == 3:
@@ -669,21 +671,21 @@ def try_move(stepX, stepY): #main game function - hero moves and actions.
                 for x in range(new_pos_x-1, new_pos_x+2):
                     if board.board_list[y][x] == '....':
                         board.board_list[y][x] = 'IGPu'
-                        remove_from_Bag('heroina', 1)
+                        bag.remove_from_Bag('heroina', 1)
                         lowBoard.remove_from_inventory('HERO', 1)
-                        add_to_Bag('money', 50)
+                        bag.add_to_Bag('money', 50)
                         break
                     elif board.board_list[y+1][x] == '....':
                         board.board_list[y+1][x] = 'IGPu'
-                        remove_from_Bag('heroina', 1)
+                        bag.remove_from_Bag('heroina', 1)
                         lowBoard.remove_from_inventory('HERO', 1)
-                        add_to_Bag('money', 50)
+                        bag.add_to_Bag('money', 50)
                         break
                     elif board.board_list[y+2][x] == '....':
                         board.board_list[y+2][x] = 'IGPu'
-                        remove_from_Bag('heroina', 1)
+                        bag.remove_from_Bag('heroina', 1)
                         lowBoard.remove_from_inventory('HERO', 1)
-                        add_to_Bag('money', 50)
+                        bag.add_to_Bag('money', 50)
                         break
             board.board_list[new_pos_y][new_pos_x] = 'EVER'
             #board.board_list[4][2] = '....' #this is hardcoded - I have to change it.
@@ -695,17 +697,17 @@ def try_move(stepX, stepY): #main game function - hero moves and actions.
                 for x in range(new_pos_x-1, new_pos_x+2):
                     if board.board_list[y][x] == '....':
                         board.board_list[y][x] = 'PoPo'
-                        remove_from_Bag('cigarrete', 1)
+                        bag.remove_from_Bag('cigarrete', 1)
                         lowBoard.remove_from_inventory('CCCC', 1)
                         break
                     elif board.board_list[y+1][x] == '....':
                         board.board_list[y+1][x] = 'PoPo'
-                        remove_from_Bag('cigarrete', 1)
+                        bag.remove_from_Bag('cigarrete', 1)
                         lowBoard.remove_from_inventory('CCCC', 1)
                         break
                     elif board.board_list[y+2][x] == '....':
                         board.board_list[y+2][x] = 'PoPo'
-                        remove_from_Bag('cigarrete', 1)
+                        bag.remove_from_Bag('cigarrete', 1)
                         lowBoard.remove_from_inventory('CCCC', 1)
                         break
             board.board_list[new_pos_y][new_pos_x] = '....'
@@ -717,26 +719,26 @@ def try_move(stepX, stepY): #main game function - hero moves and actions.
                 for x in range(new_pos_x-1, new_pos_x+2):
                     if board.board_list[y][x] == '....':
                         board.board_list[y][x] = 'PoPo'
-                        remove_from_Bag('joint', 1)
+                        bag.remove_from_Bag('joint', 1)
                         lowBoard.remove_from_inventory('JoJo', 1)
-                        add_to_Bag('money', 50)
+                        bag.add_to_Bag('money', 50)
                         break
                     elif board.board_list[y+1][x] == '....':
                         board.board_list[y+1][x] = 'PoPo'
-                        remove_from_Bag('joint', 1)
+                        bag.remove_from_Bag('joint', 1)
                         lowBoard.remove_from_inventory('JoJo', 1)
-                        add_to_Bag('money', 50)
+                        bag.add_to_Bag('money', 50)
                         break
                     elif board.board_list[y+2][x] == '....':
                         board.board_list[y+2][x] = 'PoPo'
-                        remove_from_Bag('joint', 1)
+                        bag.remove_from_Bag('joint', 1)
                         lowBoard.remove_from_inventory('JoJo', 1)
-                        add_to_Bag('money', 50)
+                        bag.add_to_Bag('money', 50)
                         break
         elif 'ganja' in bag.bag_dict and bag.bag_dict['ganja'] > 0:
-            remove_from_Bag('ganja', 1)
+            bag.remove_from_Bag('ganja', 1)
             lowBoard.remove_from_inventory('GaGa', 1)
-            add_to_Bag('money', 35)
+            bag.add_to_Bag('money', 35)
     if bnp == 'BIKE': #guy with bike - takes beer for cash, give away empty bottle.
         pass
         board.board_list[6][5] = '....' #this is hardcoded - I have to change it.
@@ -745,32 +747,32 @@ def try_move(stepX, stepY): #main game function - hero moves and actions.
                 for x in range(new_pos_x-1, new_pos_x+2):
                     if board.board_list[y][x] == '....':
                         board.board_list[y][x] = 'PIWE'
-                        remove_from_Bag('beerfull', 1)
+                        bag.remove_from_Bag('beerfull', 1)
                         lowBoard.remove_from_inventory('PIWF', 1)
-                        add_to_Bag('money', 10)
+                        bag.add_to_Bag('money', 10)
                         bike_try += 1
                         break
                     elif board.board_list[y+1][x] == '....':
                         board.board_list[y][x] = 'PIWE'
-                        remove_from_Bag('beerfull', 1)
+                        bag.remove_from_Bag('beerfull', 1)
                         lowBoard.remove_from_inventory('PIWF', 1)
-                        add_to_Bag('money', 10)
+                        bag.add_to_Bag('money', 10)
                         bike_try += 1
                         break
                     elif board.board_list[y+2][x] == '....':
                         board.board_list[y][x] = 'PIWE'
-                        remove_from_Bag('beerfull', 1)
+                        bag.remove_from_Bag('beerfull', 1)
                         lowBoard.remove_from_inventory('PIWF', 1)
-                        add_to_Bag('money', 10)
+                        bag.add_to_Bag('money', 10)
                         bike_try += 1
                         break
     if bnp == 'LASK': #she takes cigarrete box for cash and leaves cigarettes and ember.
         pass
         board.board_list[7][3] = '....' # this is hardcoded - I have to change it.
         if 'cigarettebox' in bag.bag_dict and bag.bag_dict['cigarettebox'] > 0:
-            remove_from_Bag('cigarettebox', 1)
+            bag.remove_from_Bag('cigarettebox', 1)
             lowBoard.remove_from_inventory('CIGA', 1)
-            add_to_Bag('money', 15)
+            bag.add_to_Bag('money', 15)
             board.board_list[new_pos_y][new_pos_x] = 'LABE'
             for y in range(new_pos_y-1, new_pos_y): # have to simplify.
                 for x in range(new_pos_x-1, new_pos_x+2):
@@ -804,33 +806,33 @@ def try_move(stepX, stepY): #main game function - hero moves and actions.
                         board.board_list[y+2][x] = 'PoPo'
                         break
         elif 'ganja' in bag.bag_dict and bag.bag_dict['ganja'] > 0 and laska_try < 2: #she also can buy 2 pieces of ganja.
-            remove_from_Bag('ganja', 1)
+            bag.remove_from_Bag('ganja', 1)
             lowBoard.remove_from_inventory('GaGa', 1)
-            add_to_Bag('money', 40)
+            bag.add_to_Bag('money', 40)
             laska_try += 1
     if bnp == 'CYGA': #first boss - you need to get 300zł or 9 piece of ganja for him.
         pass
         board.board_list[1][1] = '....' # this is hardcoded - I have to change it.
         if 'money' in bag.bag_dict and bag.bag_dict['money'] >= 300:
             board.board_list[new_pos_y][new_pos_x] = '....'
-            remove_from_Bag('money', 300)
+            bag.remove_from_Bag('money', 300)
         elif 'ganja' in bag.bag_dict and bag.bag_dict['ganja'] >= 9:
             board.board_list[new_pos_y][new_pos_x] = '....'
-            remove_from_Bag('ganja', 9)
+            bag.remove_from_Bag('ganja', 9)
             lowBoard.remove_from_inventory('GaGa', 9)
     if bnp == 'AGAT': #she takes car keys and let you escape; she can buy cigarrete box.
         pass
         if 'cigarettebox' in bag.bag_dict and bag.bag_dict['cigarettebox'] > 0:
-            remove_from_Bag('cigarettebox', 1)
+            bag.remove_from_Bag('cigarettebox', 1)
             lowBoard.remove_from_inventory('CIGA', 1)
-            add_to_Bag('money', 15)
+            bag.add_to_Bag('money', 15)
         if 'cigarrete' in bag.bag_dict and bag.bag_dict['cigarrete'] > 0:
-            remove_from_Bag('cigarrete', 1)
+            bag.remove_from_Bag('cigarrete', 1)
             lowBoard.remove_from_inventory('CCCC', 1)
-            add_to_Bag('money', 5)
+            bag.add_to_Bag('money', 5)
         if 'carkeys' in bag.bag_dict and bag.bag_dict['carkeys'] == 1:
             board.board_list[new_pos_y][new_pos_x] = '....'
-            remove_from_Bag('carkeys', 1)
+            bag.remove_from_Bag('carkeys', 1)
             lowBoard.remove_from_inventory('CKEY', 1)
     if bnp == 'CPU1' or bnp == 'CPU2': #junkies who takes heroine for cash and leave everlast and empty syringe.
         pass
@@ -839,130 +841,88 @@ def try_move(stepX, stepY): #main game function - hero moves and actions.
                 for x in range(new_pos_x-1, new_pos_x+2):
                     if board.board_list[y][x] == '....':
                         board.board_list[y][x] = 'IGPu'
-                        remove_from_Bag('heroina', 1)
+                        bag.remove_from_Bag('heroina', 1)
                         lowBoard.remove_from_inventory('HERO', 1)
-                        add_to_Bag('money', 50)
+                        bag.add_to_Bag('money', 50)
                         break
                     elif board.board_list[y+1][x] == '....':
                         board.board_list[y+1][x] = 'IGPu'
-                        remove_from_Bag('heroina', 1)
+                        bag.remove_from_Bag('heroina', 1)
                         lowBoard.remove_from_inventory('HERO', 1)
-                        add_to_Bag('money', 50)
+                        bag.add_to_Bag('money', 50)
                         break
                     elif board.board_list[y+2][x] == '....':
                         board.board_list[y+2][x] = 'IGPu'
-                        remove_from_Bag('heroina', 1)
+                        bag.remove_from_Bag('heroina', 1)
                         lowBoard.remove_from_inventory('HERO', 1)
-                        add_to_Bag('money', 50)
+                        bag.add_to_Bag('money', 50)
                         break
             board.board_list[new_pos_y][new_pos_x] = 'EVER'
     if bnp == 'GRAB': #second boss - takes all everlasts and leaves car keys.
         pass
         if bag.bag_dict['money'] < 20:
-            add_to_Bag('money', 20)
+            bag.add_to_Bag('money', 20)
         if 'everlast' in bag.bag_dict and bag.bag_dict['everlast'] == 6:
             board.board_list[new_pos_y][new_pos_x] = 'CKEY'
-            remove_from_Bag('everlast', 6)
+            bag.remove_from_Bag('everlast', 6)
             lowBoard.remove_from_inventory('EVER', 6)
             if 'bucketWater' in bag.bag_dict and bag.bag_dict['bucketWater'] == 1:
-                remove_from_Bag('bucketWater', 1)
+                bag.remove_from_Bag('bucketWater', 1)
                 lowBoard.remove_from_inventory('BUWA', 1)
             if 'bucketEmpty' in bag.bag_dict and bag.bag_dict['bucketEmpty'] == 1:
-                remove_from_Bag('bucketEmpty', 1)
+                bag.remove_from_Bag('bucketEmpty', 1)
                 lowBoard.remove_from_inventory('BUEM', 1)
             board.board_list[6][2] = '....' #this is hardcoded - I have to change it.
     if bnp == 'CKEY': #car key.
-        add_to_Bag('carkeys', 1)
+        bag.add_to_Bag('carkeys', 1)
         lowBoard.add_to_inventory('CKEY', 1)
     if bnp == 'BUEM' and bag.bag_dict['money'] >= 20:
-        add_to_Bag('bucketEmpty', 1)
+        bag.add_to_Bag('bucketEmpty', 1)
         lowBoard.add_to_inventory('BUEM', 1)
-        remove_from_Bag('money', 20)
+        bag.remove_from_Bag('money', 20)
         board.board_list[new_pos_y][new_pos_x] = 'buem'
     if bnp == 'HYDR': #hydrant - you can get water from here.
         if 'bucketEmpty' in bag.bag_dict and bag.bag_dict['bucketEmpty'] > 0:
             lowBoard.remove_from_inventory('BUEM', 1)
-            remove_from_Bag('bucketEmpty', 1)
+            bag.remove_from_Bag('bucketEmpty', 1)
             lowBoard.add_to_inventory('BUWA', 1)
-            add_to_Bag('bucketWater', 1)
+            bag.add_to_Bag('bucketWater', 1)
     if bnp == 'POPP' and 'bucketWater' in bag.bag_dict and bag.bag_dict['bucketWater'] > 0: #poppy-seed watering.
-        remove_from_Bag('bucketWater', 1)
+        bag.remove_from_Bag('bucketWater', 1)
         lowBoard.remove_from_inventory('BUWA', 1)
-        add_to_Bag('bucketEmpty', 1)
+        bag.add_to_Bag('bucketEmpty', 1)
         lowBoard.add_to_inventory('BUEM', 1)
         board.board_list[new_pos_y][new_pos_x] = 'MAKU'
     if bnp == 'SEKA': #secateurs.
-        add_to_Bag('sekator', 1)
+        bag.add_to_Bag('sekator', 1)
         lowBoard.add_to_inventory('SEKA', 1)
     if bnp == 'HEHE': #hedge to cut.
         if 'sekator' in bag.bag_dict and bag.bag_dict['sekator'] > 0:
             board.board_list[new_pos_y][new_pos_x] = '....'
-            remove_from_Bag('sekator', 1)
+            bag.remove_from_Bag('sekator', 1)
             lowBoard.remove_from_inventory('SEKA', 1)
     if bnp == 'BOTT': #bottle.
-        add_to_Bag('bottle', 1)
+        bag.add_to_Bag('bottle', 1)
         lowBoard.add_to_inventory('BOTT', 1)
     if bnp == 'IGNO' and bag.bag_dict['money'] >= 5: #new syringe to buy in store.
-            add_to_Bag('Strzykawka', 1)
+            bag.add_to_Bag('Strzykawka', 1)
             lowBoard.add_to_inventory('IGNO', 1)
-            remove_from_Bag('money', 5)
+            bag.remove_from_Bag('money', 5)
             board.board_list[new_pos_y][new_pos_x] = 'igno'
     if bnp == 'IGPu': #used syrigne to exchange in recycler been.
-        add_to_Bag('StrzykawkaEmpty', 1)
+        bag.add_to_Bag('StrzykawkaEmpty', 1)
         lowBoard.add_to_inventory('IGPu', 1)
     if bnp == 'BURN': #burner where you can cook heroine.
-        cook_heroin()
+        inv.cook_heroin()
     if bnp == 'EVER': #everlast.
-        add_to_Bag('everlast', 1)
+        bag.add_to_Bag('everlast', 1)
         lowBoard.add_to_inventory('EVER', 1)
     else:
         pass # cannot move - wall
 
 
-def add_to_Bag(added_item, q): #adds taken item to bag.
-    if added_item in bag.bag_dict:
-        bag.bag_dict[added_item] += q
-    else:
-        bag.bag_dict[added_item] = q
-
-def remove_from_Bag(removed_item, q): #removes item from bag.
-    bag.bag_dict[removed_item] -= q
-
-def roll_joint(): #rolls joint.
-    if ('cigarrete' in bag.bag_dict and bag.bag_dict['cigarrete'] >= 1) and ('ganja' in bag.bag_dict and bag.bag_dict['ganja'] >= 1):
-        remove_from_Bag('cigarrete', 1)
-        remove_from_Bag('ganja', 1)
-        lowBoard.remove_from_inventory('CCCC', 1)
-        lowBoard.remove_from_inventory('GaGa', 1)
-        add_to_Bag('joint', 1)
-        lowBoard.add_to_inventory('JoJo', 1)
-
-def roll_cigarrete(): #rolls cigarrete (not in use at the moment).
-    if 'ember' in bag.bag_dict and bag.bag_dict['ember'] >= 2:
-        remove_from_Bag('ember', 2)
-        lowBoard.remove_from_inventory('PoPo', 2)
-        add_to_Bag('cigarrete', 1)
-        lowBoard.add_to_inventory('CCCC', 1)
-
-def cook_heroin(): #cooks heroine.
-    if ('poppy' in bag.bag_dict and bag.bag_dict['poppy'] >= 1) and ('Strzykawka' in bag.bag_dict and bag.bag_dict['Strzykawka'] >= 1):
-        remove_from_Bag('Strzykawka', 1)
-        remove_from_Bag('poppy', 1)
-        lowBoard.remove_from_inventory('MAKU', 1)
-        lowBoard.remove_from_inventory('IGNO', 1)
-        add_to_Bag('heroina', 1)
-        lowBoard.add_to_inventory('HERO', 1)
-
-def unpack_cigarettes(): #unpacking cigarret box.
-    if 'cigarettebox' in bag.bag_dict and bag.bag_dict['cigarettebox'] > 0:
-        remove_from_Bag('cigarettebox', 1)
-        lowBoard.remove_from_inventory('CIGA', 1)
-        add_to_Bag('ember', 1)
-        lowBoard.add_to_inventory('PoPo', 1)
-        add_to_Bag('cigarrete', 2)
-        lowBoard.add_to_inventory('CCCC', 2)
-
-def emptyBag(): #install bag (once in game).
+#OTHER FUNCTIONS AND CLASSES.
+def emptyBag(): #checks is bag empty or not.
     if sum(bag.bag_dict.values()) == 1:
         lowBoard.lowBoard_list[0][0] = 'bEbE'
     elif sum(bag.bag_dict.values()) == 2 and 'bag' in bag.bag_dict and 'phone' in bag.bag_dict:
@@ -974,73 +934,16 @@ def emptyBag(): #install bag (once in game).
     if 'money' in bag.bag_dict:
         screen.blit(font.render((str(bag.bag_dict['money'])+'zł'), True, (255,255, 255)), (350, 475))
 
-def exchange_bottle(): #exchanges empty bottle to beer in store.
-    if 'beerempty' in bag.bag_dict and bag.bag_dict['beerempty'] > 0:
-        num_cells_x = len(board.board_list[0])
-        num_cells_y = len(board.board_list)
-        for y in range(num_cells_y):
-            for x in range(num_cells_x):
-                if board.board_list[y][x] == 'piwf':
-                    board.board_list[y][x] = 'PIWF'
-                    add_to_Bag('money', 2)
-                    remove_from_Bag('beerempty', 1)
-                    lowBoard.remove_from_inventory('PIWE', 1)
-                    
-def exchange_cans(): #exchanges 3 cans to crowbar in store.
-    if 'can' in bag.bag_dict and bag.bag_dict['can'] >= 3:
-        num_cells_x = len(board.board_list[0])
-        num_cells_y = len(board.board_list)
-        for y in range(num_cells_y):
-            for x in range(num_cells_x):
-                if board.board_list[y][x] == 'crow':
-                    board.board_list[y][x] = 'CROW'
-                    remove_from_Bag('can', 3)
-                    lowBoard.remove_from_inventory('PuPu', 3)
-                    add_to_Bag('money', 3)
-
-def exchange_embers(): #exchanges 4 embers to cigarrete box in store.
-    if 'ember' in bag.bag_dict and bag.bag_dict['ember'] >= 4:
-        num_cells_x = len(board.board_list[0])
-        num_cells_y = len(board.board_list)
-        for y in range(num_cells_y):
-            for x in range(num_cells_x):
-                if board.board_list[y][x] == 'ciga':
-                    board.board_list[y][x] = 'CIGA'
-                    remove_from_Bag('ember', 4)
-                    lowBoard.remove_from_inventory('PoPo', 4)
-                    add_to_Bag('money', 2)
-
-def exchange_plastic_bottles(): #exchanges 3 plastic bottles to empty bucket in store.
-    if 'bottle' in bag.bag_dict and bag.bag_dict['bottle'] >= 3:
-        num_cells_x = len(board.board_list[0])
-        num_cells_y = len(board.board_list)
-        for y in range(num_cells_y):
-            for x in range(num_cells_x):
-                if board.board_list[y][x] == 'buem':
-                    board.board_list[y][x] = 'BUEM'
-                    remove_from_Bag('bottle', 3)
-                    lowBoard.remove_from_inventory('BOTT', 3)
-                    add_to_Bag('money', 3)
-
-def exchange_needle(): #exchanges empty syringe to new one in store.
-    if 'StrzykawkaEmpty' in bag.bag_dict and bag.bag_dict['StrzykawkaEmpty'] > 0:
-        num_cells_x = len(board.board_list[0])
-        num_cells_y = len(board.board_list)
-        for y in range(num_cells_y):
-            for x in range(num_cells_x):
-                if board.board_list[y][x] == 'igno':
-                    board.board_list[y][x] = 'IGNO'
-                    add_to_Bag('money', 1)
-                    remove_from_Bag('StrzykawkaEmpty', 1)
-                    lowBoard.remove_from_inventory('IGPu', 1)
+recycler = Recycler(board, lowBoard, bag) #exchange trash into goods for buy in store.
 
 #GAME:
 pygame.display.set_caption('Gra w pyGame')
 pygame.init()
+font = pygame.font.SysFont('comicsansms', 24)
 screen = pygame.display.set_mode((screen_width, screen_height))
+
 done = False
 clock = pygame.time.Clock()
-font = pygame.font.SysFont('comicsansms', 24)
 
 while not done:
     for event in pygame.event.get():
@@ -1058,10 +961,7 @@ while not done:
     screen.fill((0,0,0))
     draw_board(cell_size)
     draw_lowBoard(cell_size)
-    emptyBag()    
+    emptyBag()
 
     pygame.display.flip()
     clock.tick(60)
-
-
-
