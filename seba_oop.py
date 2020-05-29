@@ -10,6 +10,8 @@ from Moduls.Inv import Inv
 from Moduls.Signs import Signs
 from Moduls.Bag import Bag
 from Moduls.Recycler import Recycler
+from Moduls.Steps import Steps
+
 
 #BOARDS:
 board = Board() #generate boards for every level; has methods to save/load local boards.
@@ -43,7 +45,6 @@ inv = Inv(lowBoard, bag) #generate inventory graphics dictionary, got several in
 
 #SIGNS:
 signs = Signs() #has list of signs and generate signs graphics dictionary.
-
 
 #DRAWING FUNCTION:
 empty_cells = ['....', 'STAR', 'STA1', 'BACK', '-1-1', '+1+1', 'BrA1', 'BrA2',
@@ -393,18 +394,11 @@ def draw_lowBoard(cell_size): #draws inventory board.
             elif lowBoard.lowBoard_list[y][x] == ('....' or 'IIII'):
                 pass # empty cell
 
-
-#MOVE/ACTION FUNCTION:
-junkie_try = 0
-bike_try = 0
-laska_try = 0
+#MOVE/STEP/ACTION FUNCTION:
+steps = Steps(board, lowBoard, bag)
 
 def try_move(stepX, stepY): #main game function - hero moves and actions.
     global hero_position
-    global junkie_try
-    global bike_try
-    global laska_try
-
     new_pos_x = hero_position[0]+stepX
     new_pos_y = hero_position[1]+stepY
     last_pos_x = hero_position[0]
@@ -412,7 +406,7 @@ def try_move(stepX, stepY): #main game function - hero moves and actions.
     bnp = board.board_list[new_pos_y][new_pos_x]
     blp = board.board_list[last_pos_y][last_pos_x]
     lowBoard.remove_opening_credit() #removes starting sign from inventory board.
-    
+
     if (bnp in board.FREE_MOVES):
         hero_position = (new_pos_x, new_pos_y)
     if (bnp in board.ITEMS_TO_TAKE):
@@ -437,29 +431,9 @@ def try_move(stepX, stepY): #main game function - hero moves and actions.
         #lowBoard.lowBoard_list[2][4] = 'i9i9' #This is hardcoded, I have to change it.
     if bnp == 'M1M1': #modem - it opens gate.
         board.open_gate()
-    if bnp == 'ClCl' and 'key' in bag.bag_dict and bag.bag_dict['key'] == 1: #have to simplify this. It opens closet with stuff.
+    if bnp == 'ClCl' and 'key' in bag.bag_dict and bag.bag_dict['key'] == 1: #closet with stuff.
         hero_position = (new_pos_x, new_pos_y)
-        for y in range(new_pos_y-1, new_pos_y):
-            for x in range(new_pos_x-1, new_pos_x+2):
-                if board.board_list[y][x] == '....':
-                    board.board_list[y][x] = 'CaCa'
-                    break
-                elif board.board_list[y+1][x] == '....':
-                    board.board_list[y+1][x] = 'CaCa'
-                    break
-                elif board.board_list[y+2][x] == '....':
-                    board.board_list[y+2][x] = 'CaCa'
-                    break
-            for x in range(new_pos_x-1, new_pos_x+2):
-                if board.board_list[y][x] == '....':
-                    board.board_list[y][x] = '@2@2'
-                    break
-                elif board.board_list[y+1][x] == '....':
-                    board.board_list[y+1][x] = '@2@2'
-                    break
-                elif board.board_list[y+2][x] == '....':
-                    board.board_list[y+2][x] = '@2@2'
-                    break
+        steps.open_closet(new_pos_x, new_pos_y)
         bag.remove_from_Bag('key', 1)
         lowBoard.remove_from_inventory('@1@1', 1)
     if bnp == 'BrBr' and blp == 'BrA1': #broken wall - hidden stuff.
@@ -532,7 +506,6 @@ def try_move(stepX, stepY): #main game function - hero moves and actions.
             lowBoard.remove_from_inventory('CROW', 1)
         else:
             pass # cannot move - closed
-        
     if bnp == '$1$1': #door.
         if 'key2' in bag.bag_dict and bag.bag_dict['key2'] == 1:
             hero_position = (new_pos_x, new_pos_y)
@@ -622,194 +595,26 @@ def try_move(stepX, stepY): #main game function - hero moves and actions.
     if bnp == 'KOLO': #he sells ganja for cash.
         pass
         board.board_list[1][3] = '....' #this is hardcoded - I have to change it.
-        if 'money' in bag.bag_dict and bag.bag_dict['money'] >= 35:
-            for y in range(new_pos_y-1, new_pos_y): #to simplify.
-                for x in range(new_pos_x-1, new_pos_x+2):
-                    if board.board_list[y][x] == '....':
-                        board.board_list[y][x] = 'GaGa'
-                        bag.remove_from_Bag('money', 35)
-                        break
-                    elif board.board_list[y+1][x] == '....':
-                        board.board_list[y+1][x] = 'GaGa'
-                        bag.remove_from_Bag('money', 35)
-                        break
-                    elif board.board_list[y+2][x] == '....':
-                        board.board_list[y+2][x] = 'GaGa'
-                        bag.remove_from_Bag('money', 35)
-                        break            
+        steps.buy_cannabis(new_pos_x, new_pos_y)
     if bnp == 'JUNK': #she takes ganja or heroine for cash; leaves cigarrete butts (ember).
         pass
-        if 'ganja' in bag.bag_dict and bag.bag_dict['ganja'] > 0:
-            for y in range(new_pos_y-1, new_pos_y): # have to simplify.
-                for x in range(new_pos_x-1, new_pos_x+2):
-                    if board.board_list[y][x] == '....':
-                        board.board_list[y][x] = 'PoPo'
-                        bag.remove_from_Bag('ganja', 1)
-                        lowBoard.remove_from_inventory('GaGa', 1)
-                        bag.add_to_Bag('money', 40)
-                        junkie_try += 1
-                        break
-                    elif board.board_list[y+1][x] == '....':
-                        board.board_list[y+1][x] = 'PoPo'
-                        bag.remove_from_Bag('ganja', 1)
-                        lowBoard.remove_from_inventory('GaGa', 1)
-                        bag.add_to_Bag('money', 40)
-                        junkie_try += 1
-                        break
-                    elif board.board_list[y+2][x] == '....':
-                        board.board_list[y+2][x] = 'PoPo'
-                        bag.remove_from_Bag('ganja', 1)
-                        lowBoard.remove_from_inventory('GaGa', 1)
-                        bag.add_to_Bag('money', 40)
-                        junkie_try += 1
-                        break
-            if junkie_try == 3:
-                board.board_list[new_pos_y][new_pos_x] = 'JUNB'
-                board.board_list[6][4] = '....' # this is hardcoded - I have to change it.
-        if 'heroina' in bag.bag_dict and bag.bag_dict['heroina'] > 0:
-            for y in range(new_pos_y-1, new_pos_y): # have to simplify this.
-                for x in range(new_pos_x-1, new_pos_x+2):
-                    if board.board_list[y][x] == '....':
-                        board.board_list[y][x] = 'IGPu'
-                        bag.remove_from_Bag('heroina', 1)
-                        lowBoard.remove_from_inventory('HERO', 1)
-                        bag.add_to_Bag('money', 50)
-                        break
-                    elif board.board_list[y+1][x] == '....':
-                        board.board_list[y+1][x] = 'IGPu'
-                        bag.remove_from_Bag('heroina', 1)
-                        lowBoard.remove_from_inventory('HERO', 1)
-                        bag.add_to_Bag('money', 50)
-                        break
-                    elif board.board_list[y+2][x] == '....':
-                        board.board_list[y+2][x] = 'IGPu'
-                        bag.remove_from_Bag('heroina', 1)
-                        lowBoard.remove_from_inventory('HERO', 1)
-                        bag.add_to_Bag('money', 50)
-                        break
-            board.board_list[new_pos_y][new_pos_x] = 'EVER'
-            #board.board_list[4][2] = '....' #this is hardcoded - I have to change it.
+        steps.deal_with_junkie(new_pos_x, new_pos_y)
     if bnp == 'FATM': #he takes cigarret and leave ciggaret butt (ember).
         pass
         board.board_list[6][3] = '....' #this is hardcoded - I have to change it.
-        if 'cigarrete' in bag.bag_dict and bag.bag_dict['cigarrete'] > 0:
-            for y in range(new_pos_y-1, new_pos_y): #have to simplify this.
-                for x in range(new_pos_x-1, new_pos_x+2):
-                    if board.board_list[y][x] == '....':
-                        board.board_list[y][x] = 'PoPo'
-                        bag.remove_from_Bag('cigarrete', 1)
-                        lowBoard.remove_from_inventory('CCCC', 1)
-                        break
-                    elif board.board_list[y+1][x] == '....':
-                        board.board_list[y+1][x] = 'PoPo'
-                        bag.remove_from_Bag('cigarrete', 1)
-                        lowBoard.remove_from_inventory('CCCC', 1)
-                        break
-                    elif board.board_list[y+2][x] == '....':
-                        board.board_list[y+2][x] = 'PoPo'
-                        bag.remove_from_Bag('cigarrete', 1)
-                        lowBoard.remove_from_inventory('CCCC', 1)
-                        break
-            board.board_list[new_pos_y][new_pos_x] = '....'
+        steps.cigarrete_for_fatman(new_pos_x, new_pos_y)
     if bnp == 'SLUT': #she takes joints for cash; give away cigarret butt.
         pass
         #board.board_list[1][4] = '....' #this is hardcoded - I have to change it.
-        if 'joint' in bag.bag_dict and bag.bag_dict['joint'] > 0:
-            for y in range(new_pos_y-1, new_pos_y): # have to simplify.
-                for x in range(new_pos_x-1, new_pos_x+2):
-                    if board.board_list[y][x] == '....':
-                        board.board_list[y][x] = 'PoPo'
-                        bag.remove_from_Bag('joint', 1)
-                        lowBoard.remove_from_inventory('JoJo', 1)
-                        bag.add_to_Bag('money', 50)
-                        break
-                    elif board.board_list[y+1][x] == '....':
-                        board.board_list[y+1][x] = 'PoPo'
-                        bag.remove_from_Bag('joint', 1)
-                        lowBoard.remove_from_inventory('JoJo', 1)
-                        bag.add_to_Bag('money', 50)
-                        break
-                    elif board.board_list[y+2][x] == '....':
-                        board.board_list[y+2][x] = 'PoPo'
-                        bag.remove_from_Bag('joint', 1)
-                        lowBoard.remove_from_inventory('JoJo', 1)
-                        bag.add_to_Bag('money', 50)
-                        break
-        elif 'ganja' in bag.bag_dict and bag.bag_dict['ganja'] > 0:
-            bag.remove_from_Bag('ganja', 1)
-            lowBoard.remove_from_inventory('GaGa', 1)
-            bag.add_to_Bag('money', 35)
+        steps.deal_with_slut(new_pos_x, new_pos_y)
     if bnp == 'BIKE': #guy with bike - takes beer for cash, give away empty bottle.
         pass
         board.board_list[6][5] = '....' #this is hardcoded - I have to change it.
-        if 'beerfull' in bag.bag_dict and bag.bag_dict['beerfull'] > 0 and bike_try <= 9:
-            for y in range(new_pos_y-1, new_pos_y): # have to simplify.
-                for x in range(new_pos_x-1, new_pos_x+2):
-                    if board.board_list[y][x] == '....':
-                        board.board_list[y][x] = 'PIWE'
-                        bag.remove_from_Bag('beerfull', 1)
-                        lowBoard.remove_from_inventory('PIWF', 1)
-                        bag.add_to_Bag('money', 10)
-                        bike_try += 1
-                        break
-                    elif board.board_list[y+1][x] == '....':
-                        board.board_list[y][x] = 'PIWE'
-                        bag.remove_from_Bag('beerfull', 1)
-                        lowBoard.remove_from_inventory('PIWF', 1)
-                        bag.add_to_Bag('money', 10)
-                        bike_try += 1
-                        break
-                    elif board.board_list[y+2][x] == '....':
-                        board.board_list[y][x] = 'PIWE'
-                        bag.remove_from_Bag('beerfull', 1)
-                        lowBoard.remove_from_inventory('PIWF', 1)
-                        bag.add_to_Bag('money', 10)
-                        bike_try += 1
-                        break
+        steps.beer_for_biker(new_pos_x, new_pos_y)
     if bnp == 'LASK': #she takes cigarrete box for cash and leaves cigarettes and ember.
         pass
         board.board_list[7][3] = '....' # this is hardcoded - I have to change it.
-        if 'cigarettebox' in bag.bag_dict and bag.bag_dict['cigarettebox'] > 0:
-            bag.remove_from_Bag('cigarettebox', 1)
-            lowBoard.remove_from_inventory('CIGA', 1)
-            bag.add_to_Bag('money', 15)
-            board.board_list[new_pos_y][new_pos_x] = 'LABE'
-            for y in range(new_pos_y-1, new_pos_y): # have to simplify.
-                for x in range(new_pos_x-1, new_pos_x+2):
-                    if board.board_list[y][x] == '....':
-                        board.board_list[y][x] = 'CCCC'
-                        break
-                    elif board.board_list[y+1][x] == '....':
-                        board.board_list[y+1][x] = 'CCCC'
-                        break
-                    elif board.board_list[y+2][x] == '....':
-                        board.board_list[y+2][x] = 'CCCC'
-                        break
-                for x in range(new_pos_x-1, new_pos_x+2):
-                    if board.board_list[y][x] == '....':
-                        board.board_list[y][x] = 'CCCC'
-                        break
-                    elif board.board_list[y+1][x] == '....':
-                        board.board_list[y+1][x] = 'CCCC'
-                        break
-                    elif board.board_list[y+2][x] == '....':
-                        board.board_list[y+2][x] = 'CCCC'
-                        break
-                for x in range(new_pos_x-1, new_pos_x+2):
-                    if board.board_list[y][x] == '....':
-                        board.board_list[y][x] = 'PoPo'
-                        break
-                    elif board.board_list[y+1][x] == '....':
-                        board.board_list[y+1][x] = 'PoPo'
-                        break
-                    elif board.board_list[y+2][x] == '....':
-                        board.board_list[y+2][x] = 'PoPo'
-                        break
-        elif 'ganja' in bag.bag_dict and bag.bag_dict['ganja'] > 0 and laska_try < 2: #she also can buy 2 pieces of ganja.
-            bag.remove_from_Bag('ganja', 1)
-            lowBoard.remove_from_inventory('GaGa', 1)
-            bag.add_to_Bag('money', 40)
-            laska_try += 1
+        steps.deel_with_laska(new_pos_x, new_pos_y)
     if bnp == 'CYGA': #first boss - you need to get 300zł or 9 piece of ganja for him.
         pass
         board.board_list[1][1] = '....' # this is hardcoded - I have to change it.
@@ -919,7 +724,6 @@ def try_move(stepX, stepY): #main game function - hero moves and actions.
         lowBoard.add_to_inventory('EVER', 1)
     else:
         pass # cannot move - wall
-
 
 #OTHER FUNCTIONS AND CLASSES.
 def emptyBag(): #checks is bag empty or not.
