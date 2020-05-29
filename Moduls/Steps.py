@@ -218,3 +218,65 @@ class Steps:
             self.lowBoard.remove_from_inventory('GaGa', 1)
             self.bag.add_to_Bag('money', 40)
             self.laska_try += 1
+
+    def pay_off_Cygan(self, new_pos_x, new_pos_y):
+        if 'money' in self.bag.bag_dict and self.bag.bag_dict['money'] >= 300:
+            self.board.board_list[new_pos_y][new_pos_x] = '....'
+            self.bag.remove_from_Bag('money', 300)
+        elif 'ganja' in self.bag.bag_dict and self.bag.bag_dict['ganja'] >= 9:
+            self.board.board_list[new_pos_y][new_pos_x] = '....'
+            self.bag.remove_from_Bag('ganja', 9)
+            self.lowBoard.remove_from_inventory('GaGa', 9)
+
+    def deal_with_heroine_junkie(self, new_pos_x, new_pos_y):
+        if 'heroina' in self.bag.bag_dict and self.bag.bag_dict['heroina'] > 0:
+            for y in range(new_pos_y-1, new_pos_y): # have to simplify.
+                for x in range(new_pos_x-1, new_pos_x+2):
+                    if self.board.board_list[y][x] == '....':
+                        self.board.board_list[y][x] = 'IGPu'
+                        self.bag.remove_from_Bag('heroina', 1)
+                        self.lowBoard.remove_from_inventory('HERO', 1)
+                        self.bag.add_to_Bag('money', 50)
+                        break
+                    elif self.board.board_list[y+1][x] == '....':
+                        self.board.board_list[y+1][x] = 'IGPu'
+                        self.bag.remove_from_Bag('heroina', 1)
+                        self.lowBoard.remove_from_inventory('HERO', 1)
+                        self.bag.add_to_Bag('money', 50)
+                        break
+                    elif self.board.board_list[y+2][x] == '....':
+                        self.board.board_list[y+2][x] = 'IGPu'
+                        self.bag.remove_from_Bag('heroina', 1)
+                        self.lowBoard.remove_from_inventory('HERO', 1)
+                        self.bag.add_to_Bag('money', 50)
+                        break
+            self.board.board_list[new_pos_y][new_pos_x] = 'EVER'
+
+    def meet_the_gravedigger(self, new_pos_x, new_pos_y):
+        if self.bag.bag_dict['money'] < 20:
+            self.bag.add_to_Bag('money', 20)
+        if 'everlast' in self.bag.bag_dict and self.bag.bag_dict['everlast'] == 6:
+            self.board.board_list[new_pos_y][new_pos_x] = 'CKEY'
+            self.bag.remove_from_Bag('everlast', 6)
+            self.lowBoard.remove_from_inventory('EVER', 6)
+            if 'bucketWater' in self.bag.bag_dict and self.bag.bag_dict['bucketWater'] == 1:
+                self.bag.remove_from_Bag('bucketWater', 1)
+                self.lowBoard.remove_from_inventory('BUWA', 1)
+            if 'bucketEmpty' in self.bag.bag_dict and self.bag.bag_dict['bucketEmpty'] == 1:
+                self.bag.remove_from_Bag('bucketEmpty', 1)
+                self.lowBoard.remove_from_inventory('BUEM', 1)
+            self.board.board_list[6][2] = '....' #this is hardcoded - I have to change it.
+
+    def flirt_with_Agata(self, new_pos_x, new_pos_y):
+        if 'cigarettebox' in self.bag.bag_dict and self.bag.bag_dict['cigarettebox'] > 0:
+            self.bag.remove_from_Bag('cigarettebox', 1)
+            self.lowBoard.remove_from_inventory('CIGA', 1)
+            self.bag.add_to_Bag('money', 15)
+        if 'cigarrete' in self.bag.bag_dict and self.bag.bag_dict['cigarrete'] > 0:
+            self.bag.remove_from_Bag('cigarrete', 1)
+            self.lowBoard.remove_from_inventory('CCCC', 1)
+            self.bag.add_to_Bag('money', 5)
+        if 'carkeys' in self.bag.bag_dict and self.bag.bag_dict['carkeys'] == 1:
+            self.board.board_list[new_pos_y][new_pos_x] = '....'
+            self.bag.remove_from_Bag('carkeys', 1)
+            self.lowBoard.remove_from_inventory('CKEY', 1)

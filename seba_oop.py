@@ -618,70 +618,20 @@ def try_move(stepX, stepY): #main game function - hero moves and actions.
     if bnp == 'CYGA': #first boss - you need to get 300zł or 9 piece of ganja for him.
         pass
         board.board_list[1][1] = '....' # this is hardcoded - I have to change it.
-        if 'money' in bag.bag_dict and bag.bag_dict['money'] >= 300:
-            board.board_list[new_pos_y][new_pos_x] = '....'
-            bag.remove_from_Bag('money', 300)
-        elif 'ganja' in bag.bag_dict and bag.bag_dict['ganja'] >= 9:
-            board.board_list[new_pos_y][new_pos_x] = '....'
-            bag.remove_from_Bag('ganja', 9)
-            lowBoard.remove_from_inventory('GaGa', 9)
+        steps.pay_off_Cygan(new_pos_x, new_pos_y)
     if bnp == 'AGAT': #she takes car keys and let you escape; she can buy cigarrete box.
         pass
-        if 'cigarettebox' in bag.bag_dict and bag.bag_dict['cigarettebox'] > 0:
-            bag.remove_from_Bag('cigarettebox', 1)
-            lowBoard.remove_from_inventory('CIGA', 1)
-            bag.add_to_Bag('money', 15)
-        if 'cigarrete' in bag.bag_dict and bag.bag_dict['cigarrete'] > 0:
-            bag.remove_from_Bag('cigarrete', 1)
-            lowBoard.remove_from_inventory('CCCC', 1)
-            bag.add_to_Bag('money', 5)
-        if 'carkeys' in bag.bag_dict and bag.bag_dict['carkeys'] == 1:
-            board.board_list[new_pos_y][new_pos_x] = '....'
-            bag.remove_from_Bag('carkeys', 1)
-            lowBoard.remove_from_inventory('CKEY', 1)
+        steps.flirt_with_Agata(new_pos_x, new_pos_y)
     if bnp == 'CPU1' or bnp == 'CPU2': #junkies who takes heroine for cash and leave everlast and empty syringe.
         pass
-        if 'heroina' in bag.bag_dict and bag.bag_dict['heroina'] > 0:
-            for y in range(new_pos_y-1, new_pos_y): # have to simplify.
-                for x in range(new_pos_x-1, new_pos_x+2):
-                    if board.board_list[y][x] == '....':
-                        board.board_list[y][x] = 'IGPu'
-                        bag.remove_from_Bag('heroina', 1)
-                        lowBoard.remove_from_inventory('HERO', 1)
-                        bag.add_to_Bag('money', 50)
-                        break
-                    elif board.board_list[y+1][x] == '....':
-                        board.board_list[y+1][x] = 'IGPu'
-                        bag.remove_from_Bag('heroina', 1)
-                        lowBoard.remove_from_inventory('HERO', 1)
-                        bag.add_to_Bag('money', 50)
-                        break
-                    elif board.board_list[y+2][x] == '....':
-                        board.board_list[y+2][x] = 'IGPu'
-                        bag.remove_from_Bag('heroina', 1)
-                        lowBoard.remove_from_inventory('HERO', 1)
-                        bag.add_to_Bag('money', 50)
-                        break
-            board.board_list[new_pos_y][new_pos_x] = 'EVER'
+        steps.deal_with_heroine_junkie(new_pos_x, new_pos_y)
     if bnp == 'GRAB': #second boss - takes all everlasts and leaves car keys.
         pass
-        if bag.bag_dict['money'] < 20:
-            bag.add_to_Bag('money', 20)
-        if 'everlast' in bag.bag_dict and bag.bag_dict['everlast'] == 6:
-            board.board_list[new_pos_y][new_pos_x] = 'CKEY'
-            bag.remove_from_Bag('everlast', 6)
-            lowBoard.remove_from_inventory('EVER', 6)
-            if 'bucketWater' in bag.bag_dict and bag.bag_dict['bucketWater'] == 1:
-                bag.remove_from_Bag('bucketWater', 1)
-                lowBoard.remove_from_inventory('BUWA', 1)
-            if 'bucketEmpty' in bag.bag_dict and bag.bag_dict['bucketEmpty'] == 1:
-                bag.remove_from_Bag('bucketEmpty', 1)
-                lowBoard.remove_from_inventory('BUEM', 1)
-            board.board_list[6][2] = '....' #this is hardcoded - I have to change it.
+        steps.meet_the_gravedigger(new_pos_x, new_pos_y)
     if bnp == 'CKEY': #car key.
         bag.add_to_Bag('carkeys', 1)
         lowBoard.add_to_inventory('CKEY', 1)
-    if bnp == 'BUEM' and bag.bag_dict['money'] >= 20:
+    if bnp == 'BUEM' and bag.bag_dict['money'] >= 20: #empty bucket.
         bag.add_to_Bag('bucketEmpty', 1)
         lowBoard.add_to_inventory('BUEM', 1)
         bag.remove_from_Bag('money', 20)
