@@ -1,5 +1,5 @@
 # seba-game (Object-Oriented Programming Version)
-Simple rpg-parody game written using python (pygame). This is new version of my first major project "Seba". This time I changed the way the code is written, using object-oriented programming methods.
+My first major project - simple rpg-parody game written using python (pygame). This is new version of "Seba" - this time I changed the way the code is written, using object-oriented programming (added moduls in separate files).
 
 ![gameplay](Readme_Seba.png)
 
