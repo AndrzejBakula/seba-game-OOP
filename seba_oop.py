@@ -28,7 +28,7 @@ screen_height = screen_object.screen_height
 hero = Hero(board) #has hero coordinates tuple, list of hero variations and generate hero graphics dictionary.
 hero_position = hero.hero_position
 
-#BAG/ITEMS:
+#BAG:
 bag = Bag(board, lowBoard, hero)
 
 #WALLS:
