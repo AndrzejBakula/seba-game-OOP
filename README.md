@@ -7,8 +7,8 @@ My first major project - simple rpg-parody game written using python (pygame). T
 You will need python3 and pygame library.
 - fork and clone repository, or download all files,
 - create virtualenv and run it,
-- instal requirements, using: **pip install -r requirements.txt**,
-- run seba_oop.py using python.
+- instal pygame, using: **pip install -r requirements.txt**,
+- run seba_oop.py, using python.
 
 ## How to play "Seba"?
 Use arrow keys to move Seba, run away home and try to survive in the yards and streets of Wrocław.
