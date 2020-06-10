@@ -1,11 +1,11 @@
-# seba-game (Object-Oriented Programming Version)
+# seba-game (Object-Oriented Programming) - version 2.1
 My first major project - simple rpg-parody game written using python (pygame). This is second version of "Seba" - this time I changed the way the code is written, using object-oriented programming (added moduls in separate files).
 
 ![gameplay](Readme_Seba.png)
 
 ## How to run "Seba"?
 You will need python3 and pygame library.
-- fork and clone repository, or download all files,
+- fork and clone repository or download all files,
 - create virtualenv, using: **virtualenv -p python3 env**,
 - run virtualenv, using: **source env/bin/activate**,
 - instal pygame, using: **pip3 install -r requirements.txt**,
