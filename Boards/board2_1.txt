@@ -4,6 +4,6 @@ LLLL	GF3A	G1G1	GF3B	####	####	....	####	RRRR
 -1-1	....	....	....	####	CRUU	....	ZAPA	RRRR
 -1-1	STAR	....	....	####	####	....	####	RRRR
 -1-1	....	....	....	....	WRO1	SKLE	KOCH	RRRR
-LLLL	####	####	NAP4	....	FATM	....	TRYF	RRRR
+LLLL	####	####	....	....	FATM	....	TRYF	RRRR
 LLLL	M1M1	dpdp	....	....	BrBr	####	####	RRRR
 DLDL	DDDD	DDDD	DDDD	DDDD	DDDD	DDDD	DDDD	DRDR
